@@ -51,6 +51,7 @@ for entry in feed.entries[:4]:  # Get the latest 4 movies
     rating = "".join(["★" for star in (rating_match.group(0) if rating_match else "")])
 
     liked = entry.get("letterboxd_memberlike", "").lower() == "yes"
+    rewatch = entry.get("letterboxd_rewatch", "").lower() == "yes"
 
     movies.append(
         {
@@ -58,6 +59,7 @@ for entry in feed.entries[:4]:  # Get the latest 4 movies
             "poster_url": poster_url,
             "rating": rating + half_rating,
             "liked": liked,
+            "rewatch": rewatch,
         }
     )
 
@@ -96,7 +98,7 @@ for i, movie in enumerate(movies):
     draw = ImageDraw.Draw(story_image)
     font = ImageFont.truetype("/Library/Fonts/Arial Unicode.ttf", 64, encoding="unic")
 
-    rating_text = movie["rating"] + (" ❤️" if movie["liked"] else "")
+    rating_text = movie["rating"] + (" 🔁" if movie["rewatch"] else "") + (" ❤️" if movie["liked"] else "")
 
     with Pilmoji(story_image) as pilmoji:
         # Use pilmoji.getsize so emoji width is included in centering calculation
